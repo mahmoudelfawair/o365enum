@@ -106,7 +106,10 @@ def o365enum_office(usernames):
         headers=headers
     )
     # we get the application identifier and session identifier
-    client_id = re.findall(b'"appId":"([^"]*)"', response.content)
+    client_id = (
+        re.findall(b'"appId":"([^"]*)"', response.content) or
+        re.findall(b"appId:\\s*\\'([^\\']+)\\'", response.content)
+    )
     # then we request the /login page which will redirect us to the authorize
     # flow
     response = session.get(
